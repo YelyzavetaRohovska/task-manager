@@ -2,7 +2,7 @@
 
 This is a Task Manager project bootstrapped with `create-t3-app`.
 
-You can see the deployed version [here]().
+You can see the deployed version [here](https://task-manager-omega-brown.vercel.app/).
 
 ### Contents
 
