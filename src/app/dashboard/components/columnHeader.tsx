@@ -7,7 +7,6 @@ import { api } from '~/trpc/react';
 import type { IColumn } from './column';
 
 import Input from '../../components/ui/input';
-import Button from '../../components/ui/button';
 import ActionConfiramtionPopup from '../../components/ui/actionConfirmationPopup';
 import { useRouter } from 'next/navigation';
 
@@ -26,9 +25,7 @@ export default function ColumnHeader({
 
   const renameColumn = api.columns.updateTitle.useMutation({
     onSuccess: () => setError(""),
-    onError: (error) => {
-      setError(error?.message?.toString() || "unknown error");
-    },
+    onError: () => setError("Error ocures, try again"),
   });
 
   const removeColumn = api.columns.deleteById.useMutation({
@@ -39,12 +36,10 @@ export default function ColumnHeader({
   })
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const title = event.target.value?.trim();
-    if (!title)
-      return;
-
+    const title = event.target.value;
+  
     setValue(title);
-    debouncedRenameColumn(() => renameColumn.mutate({id, title}));
+    debouncedRenameColumn(() => renameColumn.mutate({id, title: title.trim()}));
   };
 
   function toggleConfirmationDialog(toggle: boolean) {
@@ -60,9 +55,9 @@ export default function ColumnHeader({
         maxLength={40}
         onChange={handleInputChange}
       />
-      <Button className="px-2" onClick={() => toggleConfirmationDialog(true)}>
+      <a className="px-2 cursor-pointer" onClick={() => toggleConfirmationDialog(true)}>
         ×
-      </Button>
+      </a>
       {showConfirmation && (
         <ActionConfiramtionPopup
           text={confirmationText}

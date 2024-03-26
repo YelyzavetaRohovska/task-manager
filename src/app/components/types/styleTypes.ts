@@ -1,11 +1,11 @@
-export enum ETextSize {
+export const enum ETextSize {
   Default = "text-base",
   Small   = "text-sm",
   Big     = "text-lg",
   Large   = "text-xl",
 }
 
-export enum ETextColor {
+export const enum ETextColor {
   Default = "text-gray-900",
   Danger  = "text-red-600",
   Primary = "text-blue-600",

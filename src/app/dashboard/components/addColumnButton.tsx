@@ -1,26 +1,26 @@
 "use client";
 
 import React from "react";
-import Button from "~/app/components/ui/button";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
 
+import Button from "~/app/components/ui/button";
+
 export default function AddColumn() {
   const router = useRouter();
-  const create =  api.columns.create.useMutation({
+  const { isPending, mutate: createColumn} =  api.columns.create.useMutation({
     onSuccess: () => {
       router.refresh();
-    },
+    }
   });
-
-  function createColumn() {
-    create.mutate({title: "New column"});
-  }
  
   return (
-    <div>
-      <Button 
-        onClick={createColumn}>+ Add column</Button>
-    </div>
+    <Button 
+      disabled={isPending}
+      disabledText="Creating..."
+      onClick={() => createColumn({title: "New column"})}
+    >
+      + Add column
+    </Button>
   );
 }

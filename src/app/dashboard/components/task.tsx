@@ -7,7 +7,6 @@ import { EColorBg, ETextSize } from "../../components/types/styleTypes";
 import TaskPopup from "./taskPopup";
 import { api } from "~/trpc/react";
 import { useRouter } from "next/navigation";
-import Button from "../../components/ui/button";
 import ActionConfiramtionPopup from "../../components/ui/actionConfirmationPopup";
 
 interface ITask {
@@ -23,7 +22,7 @@ export default function Task({ id, title, description }: ITask) {
   const [showConfirmation, setShowConfirmation] = useState(false);
 
   const router = useRouter();
-  const updateTask = api.tasks.update.useMutation({
+  const { isError, mutate: updateTask } = api.tasks.update.useMutation({
     onSuccess: () => {
       toggleTaskPopup(null, false);
       router.refresh();
@@ -56,23 +55,25 @@ export default function Task({ id, title, description }: ITask) {
         <Text size={ETextSize.Big} bg={EColorBg.Default}>
           {title}
         </Text>
-        <Button
-          className="px-2"
+        <a
+          className="px-2 cursor-pointer"
           onClick={e => toggleConfirmationDialog(e, true)}
         >
           ×
-        </Button>
+        </a>
       </div>
       <Text size={ETextSize.Small}>{description}</Text>
       {isOpen && (
       <Popup onClose={(e) => toggleTaskPopup(e, false)}>
         <TaskPopup
           taskId={id}
+          isError={isError}
           onClose={e => toggleTaskPopup(e, false)}
           onSubmit={(event, data) => {
             event.stopPropagation();
             event.preventDefault();
-            updateTask.mutate({ id, ...data });
+
+            updateTask({ id, ...data });
           }}
         />
       </Popup>

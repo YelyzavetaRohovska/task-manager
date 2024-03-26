@@ -1,15 +1,19 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { EColorBg } from '../../components/types/styleTypes';
+import { api } from '~/trpc/react';
+
 import Button from '../../components/ui/button';
 import Input from '../../components/ui/input';
-import { api } from '~/trpc/react';
 import Dropdown from '../../components/ui/dropdown';
 import TextArea from '../../components/ui/textArea';
+import Text from '~/app/components/ui/text';
+
+import { EColorBg, ETextColor } from '../../components/types/styleTypes';
 
 interface ITaskPopupProps {
   taskId: string;
+  isError?: boolean;
   onSubmit: (
     event: React.ChangeEvent<HTMLElement> | React.FormEvent<HTMLFormElement>,
     data: IFormData,
@@ -25,6 +29,7 @@ interface IFormData {
 
 export default function TaskPopup({
   taskId,
+  isError,
   onSubmit,
   onClose,
 }: ITaskPopupProps): JSX.Element {
@@ -61,6 +66,7 @@ export default function TaskPopup({
           onSubmit={(e) => onSubmit(e, formData)}
           className="flex h-full flex-col gap-4"
         >
+          {isError && <Text color={ETextColor.Danger}>Your data contain errors, please update.</Text>}
           <Input
             value={formData.title}
             id="title"

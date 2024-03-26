@@ -13,23 +13,22 @@ export default function AddTask({
   statusId,
 }: IAddTask) {
   const router = useRouter();
-  const create =  api.tasks.create.useMutation({
+  const newTask = { title: "New task", statusId };
+  const { isPending, mutate: createTask} =  api.tasks.create.useMutation({
     onSuccess: () => {
       router.refresh();
     },
   });
-
-  function createTask() {
-    create.mutate({
-      title: "New task",
-      statusId,
-    });
-  }
  
   return (
     <div className="flex justify-center">
       <Button 
-        onClick={createTask}>+ Add task</Button>
+        disabled={isPending}
+        disabledText="Creating..."
+        onClick={() =>  createTask(newTask)}
+      >
+        + Add task
+      </Button>
     </div>
   );
 }
